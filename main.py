@@ -2,6 +2,7 @@ import pygame
 from core.game_loop import GameLoop
 from core import settings
 
+# To run RL car training, use train.py file
 
 def main():
     # init pygame

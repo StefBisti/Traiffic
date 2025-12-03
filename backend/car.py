@@ -11,6 +11,7 @@ class Car:
     def __init__(self, position,facing):
         #self.id = self.id_crt
         self.id = Car.id_crt
+        self.is_rl = False
         Car.id_crt +=1
         self.speed = 0
         self.friction = 0

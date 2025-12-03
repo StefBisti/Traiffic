@@ -53,6 +53,7 @@ class Simulation:
         if self.time_since_last_spawn >= self.spawn_interval:
             self.time_since_last_spawn = 0.0
             self.spawn_car(self.cars)
+            self.spawn_car(self.cars)
         for car in self.cars[:]:
             if (
                 not car.update(dt, all_cars=self.cars, road_bounds=self.road_bounds, trafficLights = self.trafficlights, coordmap = self.coord_map)
@@ -74,7 +75,7 @@ class Simulation:
                         self.trafficlighttimer = 0
                         return
             self.trafficlighttimer = 0
-        
+
 
 
     # Car spawner method for easier testing
@@ -90,13 +91,14 @@ class Simulation:
                 if np.linalg.norm(car.position - source_pos) < 0.9:
                     is_blocked = True
                     break
-
+                
             if not is_blocked:
                 source = src
-                break
+                break 
 
         if source is None:
             return
+
 
         [destination] = random.sample(self.destinations,1)
         path = self.graph.traverse(source,destination)
@@ -105,8 +107,50 @@ class Simulation:
         coords = path_to_coords(path, self.coord_map)
         if not coords:
             return
-        new_car = Car_follow(self.coord_map[source], self.graph, coords)
+        new_car = Car_follow(self.coord_map[source],self.graph,coords)
         self.cars.append(new_car)
+
+    def reset_cars(self, num_cars=1):
+        """
+        Reset the simulation: spawn `num_cars` RL-controlled cars
+        and some traffic cars.
+        """
+        self.cars = []
+
+        # Spawn RL car
+        for _ in range(num_cars):
+            self._spawn_rl_car()
+
+        # Spawn some traffic cars
+        for _ in range(3):  # adjust number of traffic cars
+            self._spawn_controller_car()
+
+    def _spawn_rl_car(self):
+        """Spawn one RL-controlled car at an available spawner."""
+        sources = list(self.spawners)
+        random.shuffle(sources)
+        source = None
+        for src in sources:
+            source_pos = np.array(self.coord_map[int(src)])
+            if all(np.linalg.norm(car.position - source_pos) >= 0.9 for car in self.cars):
+                source = src
+                break
+        if source is None:
+            return
+
+        [destination] = random.sample(self.destinations, 1)
+        path = self.graph.traverse(source, destination)
+        coords = path_to_coords(path, self.coord_map)
+        if not coords:
+            return
+
+        new_car = Car_follow(self.coord_map[int(source)], self.graph, coords)
+        new_car.is_rl = True
+        self.cars.append(new_car)
+
+    def _spawn_controller_car(self):
+        """Spawn a traffic car using your existing spawn logic."""
+        self.spawn_car(self.cars)
 
     def export_ui_state(self):
         roadNodes = [RoadNodeUI(int(x), int(y)) for (x, y) in self.coord_map.values()]
