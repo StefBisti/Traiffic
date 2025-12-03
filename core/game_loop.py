@@ -10,6 +10,11 @@ class GameLoop:
         self.screen = screen
         self.clock = clock
         self.simulation = Simulation()
+        self.simulation.reset_cars(num_cars=1)  # spawn RL + traffic
+
+        # mark RL car
+        if self.simulation.cars:
+            self.simulation.cars[0].is_rl = True
         self.camera = Camera(0, 0, 1)
         self.renderer = Renderer(
             self.camera,
@@ -30,6 +35,12 @@ class GameLoop:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+
+            state = self.simulation.export_ui_state()
+
+            for car in state.cars:  # or however your state is structured
+                if car.is_rl:
+                    print("RL CAR:", car.id, "pos =", (car.x, car.y))
 
             # update simulation
             self.simulation.update(dt)

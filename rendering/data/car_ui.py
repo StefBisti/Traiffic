@@ -4,7 +4,7 @@ import math
 class CarUI:
     # x, y - position of the car
     # vx, vy - speed of the car, used for facing direction
-    def __init__(self, id, x, y, vx, vy):
+    def __init__(self, id, x, y, vx, vy, is_rl = False):
         self.id = id
         self.x = x
         self.y = y
