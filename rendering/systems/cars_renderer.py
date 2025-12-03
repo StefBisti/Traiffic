@@ -5,8 +5,9 @@ carsImages = [
     "./assets/cars/green_car.png",
     "./assets/cars/blue_car.png",
     "./assets/cars/red_car.png",
-    "./assets/cars/orange_car.png",
 ]
+
+rlcarsImage = "./assets/cars/orange_car.png"
 
 
 class CarsRenderer:
@@ -21,6 +22,7 @@ class CarsRenderer:
 
     # loading the cars assets right at the start of the game
     def loadCarImages(self):
+        self.rlcarImage = pygame.image.load(rlcarsImage).convert_alpha()
         for index in range(0, len(carsImages)):
             carsImages[index] = pygame.image.load(carsImages[index])
 
@@ -39,7 +41,11 @@ class CarsRenderer:
             screenY = (worldY - self.camera.y) * self.camera.zoom
 
             # choosing a random colored car
-            img = carsImages[car.id % len(carsImages)]
+            # img = carsImages[car.id % len(carsImages)]
+            if car.is_rl:
+                img = self.rlcarImage  # rl car is orange
+            else:
+                img = carsImages[car.id % len(carsImages)]
 
             # scaling the image using the camera parameters
             scaled_img = pygame.transform.scale(
