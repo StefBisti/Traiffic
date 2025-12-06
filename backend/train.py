@@ -3,10 +3,23 @@ from stable_baselines3 import PPO
 from backend.singlecarenv import SingleCarEnv
 from backend.simulation import Simulation
 import pygame
+import os
 
 # Create simulation and environment
 sim = Simulation()
 env = SingleCarEnv(simulation=sim)
+
+
+MODEL_FILE = "ppo_single_car.zip"
+
+if os.path.exists(MODEL_FILE):
+    # Load existing model and continue training
+    print(f"Loading existing model from {MODEL_FILE} and continuing training.")
+    model = PPO.load(MODEL_FILE, env=env, verbose=1)
+else:
+    # Start training from scratch
+    print("No existing model found. Starting training from scratch.")
+    model = PPO("MlpPolicy", env, verbose=1)
 
 model = PPO("MlpPolicy", env, verbose=1)
 
