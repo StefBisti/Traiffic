@@ -2,8 +2,8 @@ import gymnasium as gym
 from gymnasium import spaces
 import pygame
 import numpy as np
-from ui.systems.camera import Camera
-from ui.systems.renderer import Renderer
+from rendering.systems.camera import Camera
+from rendering.systems.renderer import Renderer
 from core.settings import MAP_WIDTH, MAP_HEIGHT, GRID_ROWS, GRID_COLUMNS
 
 class SingleCarEnv(gym.Env):

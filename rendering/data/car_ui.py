@@ -10,6 +10,7 @@ class CarUI:
         self.y = y
         self.vx = vx
         self.vy = vy
+        self.is_rl = is_rl
 
     # math
     def get_direction(self):

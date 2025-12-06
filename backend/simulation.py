@@ -149,7 +149,6 @@ class Simulation:
         self.cars.append(new_car)
 
     def _spawn_controller_car(self):
-        """Spawn a traffic car using your existing spawn logic."""
         self.spawn_car(self.cars)
 
     def export_ui_state(self):
